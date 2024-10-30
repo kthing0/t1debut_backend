@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<h2>Admin Dashboard</h2>
+<button onclick="fetchUsers()">Fetch All Users</button>
+<div id="userList"></div>
+
+<h3>Register New User</h3>
+<form id="registerForm">
+    <label>Email:</label><br>
+    <input type="email" id="regEmail" required><br>
+    <label>Password:</label><br>
+    <input type="password" id="regPassword" required><br>
+    <label>First Name:</label><br>
+    <input type="text" id="firstName" required><br>
+    <label>Last Name:</label><br>
+    <input type="text" id="lastName" required><br><br>
+    <label>Phone number:</label><br>
+    <input type="text" id="phone" required><br><br>
+    <label>Birthday:</label><br>
+    <input type="text" id="birthday" required><br><br>
+    <button type="button" onclick="registerUser()">Register</button>
+</form>
+
+<script>
+    async function fetchUsers() {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const response = await fetch('/api/admin/members/', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+
+        if (response.ok) {
+            const users = await response.json();
+            const userList = document.getElementById("userList");
+            userList.innerHTML = "";
+            users.forEach(user => {
+                const userDiv = document.createElement("div");
+                userDiv.innerHTML = `
+                        <p>${user.email}</p>
+                        <button onclick="blockUser(${user.id})">Block</button>
+                        <button onclick="giveAdminPermissions(${user.id})">Give Admin</button>
+                    `;
+                userList.appendChild(userDiv);
+            });
+        } else {
+            alert("Access denied. Admin privileges required.");
+            window.location.href = "/index.html";
+        }
+    }
+
+    async function blockUser(userId) {
+        const accessToken = localStorage.getItem("accessToken");
+        await fetch(`/api/admin/users/${userId}/block`, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        alert("User blocked successfully");
+        fetchUsers();
+    }
+
+    async function giveAdminPermissions(userId) {
+        const accessToken = localStorage.getItem("accessToken");
+        await fetch(`/members/{id}/change-role`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id:userId,role: 'ADMIN' })
+        });
+        alert("Admin permissions granted");
+        fetchUsers();
+    }
+
+    async function registerUser() {
+        const accessToken = localStorage.getItem("accessToken");
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken},
+            body: JSON.stringify({ email, password, firstName, lastName })
+        });
+
+        if (response.ok) {
+            alert("User registered successfully");
+            await fetchUsers();
+        } else {
+            alert("Failed to register user");
+        }
+    }
+</script>
+</body>
+</html>

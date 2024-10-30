@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+<h2>User Profile</h2>
+<p>Welcome to your profile!</p>
+<button onclick="generateQRCode()">Generate QR Code</button>
+<br><br>
+<img id="qrCodeImage" alt="QR Code will appear here" style="display:none;">
+<script>
+    async function generateQRCode() {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const response = await fetch('/api/profile/generate-qr', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            const qrImage = document.getElementById("qrCodeImage");
+            qrImage.src = imageUrl;
+            qrImage.style.display = "block";
+        } else {
+            alert("Failed to generate QR Code. Please log in again.");
+            window.location.href = "/index.html";
+        }
+    }
+</script>
+</body>
+</html>
