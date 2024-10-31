@@ -13,14 +13,13 @@ ClubCard\backend\t1debut_project\controllers\AuthenticationController.class
 ClubCard\backend\t1debut_project\dto\VirtualCardCustomizationDTO.class
 ClubCard\backend\t1debut_project\entities\User.class
 ClubCard\backend\t1debut_project\dto\UserRegistrationDTO.class
+ClubCard\backend\t1debut_project\utils\GlobalExceptionHandler.class
 ClubCard\backend\t1debut_project\controllers\SetupController.class
 ClubCard\backend\t1debut_project\utils\UserRepository.class
 ClubCard\backend\t1debut_project\utils\VirtualCardService.class
-ClubCard\backend\t1debut_project\utils\AdminAuditLog.class
 ClubCard\backend\t1debut_project\security\JwtTokenProvider.class
 ClubCard\backend\t1debut_project\dto\UserPrivilegeDTO.class
 ClubCard\backend\t1debut_project\security\SecurityConfig.class
-ClubCard\backend\t1debut_project\utils\AdminAuditLogRepository.class
 ClubCard\backend\t1debut_project\utils\BlacklistTokenRepository.class
 ClubCard\backend\t1debut_project\utils\UserService.class
 ClubCard\backend\t1debut_project\utils\UserDetailsServiceImpl.class

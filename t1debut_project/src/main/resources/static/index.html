@@ -74,13 +74,10 @@
             const data = await response.json();
             const accessToken = data.accessToken;
 
-            // Store access token in cookie
             document.cookie = `club_session=${accessToken}; path=/;`;
 
-            // Store access token in local storage
             localStorage.setItem('accessToken', accessToken);
 
-            // Redirect to another page or show success message
 
         } catch (error) {
             document.getElementById('error').textContent = error.message;

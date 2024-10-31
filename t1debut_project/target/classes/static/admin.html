@@ -31,7 +31,7 @@
     async function fetchUsers() {
         const accessToken = localStorage.getItem("accessToken");
 
-        const response = await fetch('/api/admin/members/', {
+        const response = await fetch('/api/admin/members', {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + accessToken }
         });
@@ -51,13 +51,12 @@
             });
         } else {
             alert("Access denied. Admin privileges required.");
-            window.location.href = "/index.html";
         }
     }
 
     async function blockUser(userId) {
         const accessToken = localStorage.getItem("accessToken");
-        await fetch(`/api/admin/users/${userId}/block`, {
+        await fetch(`/api/admin/members/${userId}/block`, {
             method: 'PUT',
             headers: { 'Authorization': 'Bearer ' + accessToken }
         });
@@ -67,7 +66,7 @@
 
     async function giveAdminPermissions(userId) {
         const accessToken = localStorage.getItem("accessToken");
-        await fetch(`/members/{id}/change-role`, {
+        await fetch(`/api/admin/members/${userId}/change-role`, {
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
@@ -85,12 +84,14 @@
         const password = document.getElementById("regPassword").value;
         const firstName = document.getElementById("firstName").value;
         const lastName = document.getElementById("lastName").value;
+        const phone = document.getElementById("phone").value;
+        const birthday = document.getElementById("birthday").value;
 
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch('/api/admin/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken},
-            body: JSON.stringify({ email, password, firstName, lastName })
+            body: JSON.stringify({ email, password, firstName, lastName, phone, birthday})
         });
 
         if (response.ok) {

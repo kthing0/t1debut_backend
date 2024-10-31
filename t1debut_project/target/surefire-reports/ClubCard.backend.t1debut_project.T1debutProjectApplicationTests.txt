@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ClubCard.backend.t1debut_project.T1debutProjectApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.023 s -- in ClubCard.backend.t1debut_project.T1debutProjectApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.877 s -- in ClubCard.backend.t1debut_project.T1debutProjectApplicationTests

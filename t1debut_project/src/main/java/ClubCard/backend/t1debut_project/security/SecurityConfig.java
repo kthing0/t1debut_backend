@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,18 +31,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/setup/create-admin").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/profile.html").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
-                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/index.html").permitAll()
                         .requestMatchers("/admin.html").hasAnyRole("ADMIN", "SUPER-ADMIN")
-                        .requestMatchers("/create-admin").permitAll()
+                        .requestMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
+                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "SUPER-ADMIN")
                         .requestMatchers("/logout").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
-                        .requestMatchers("/api/profile/generate-qr").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
-                        .requestMatchers("/generate-qr").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
-                        .requestMatchers("/register").hasAnyRole("ADMIN", "SUPER-ADMIN")
-                        .requestMatchers("/members/**").hasAnyRole("ADMIN", "SUPER-ADMIN")
-                        .requestMatchers("/profile/**").hasAnyRole("ADMIN", "USER", "SUPER-ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -49,6 +47,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**");
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

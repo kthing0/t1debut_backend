@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserPrivilegeDTO {
-    private String privilege; // e.g., Standard, VIP
+    private String privilege;
 }
 

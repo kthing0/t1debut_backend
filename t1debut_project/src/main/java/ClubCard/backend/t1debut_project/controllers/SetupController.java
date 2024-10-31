@@ -21,20 +21,20 @@ public class SetupController {
     // for the first launch and testing purposes only
     @PostMapping("/create-admin")
     public ResponseEntity<String> createAdmin() {
-        if (userRepository.findByEmail("admin@example.com").isPresent()) {
-            return ResponseEntity.badRequest().body("Admin user already exists.");
+        if (userRepository.findByEmail("admin1@example.com").isPresent()) {
+            return ResponseEntity.badRequest().body("Super Admin user already exists.");
         }
 
         User admin = new User();
         admin.setEmail("admin1@example.com");
         admin.setPassword(passwordEncoder.encode("admin_password"));
-        admin.setFirstName("Admin");
+        admin.setFirstName("Admin2");
         admin.setLastName("User");
         admin.setRole("SUPER-ADMIN");
         admin.setLocked(false);
 
         userRepository.save(admin);
-        return ResponseEntity.ok("Super Admin user created with email: admin@example.com");
+        return ResponseEntity.ok("Super Admin user created");
     }
 }
 

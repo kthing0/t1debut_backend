@@ -5,6 +5,7 @@ import ClubCard.backend.t1debut_project.dto.UserPrivilegeDTO;
 import ClubCard.backend.t1debut_project.dto.UserRegistrationDTO;
 import ClubCard.backend.t1debut_project.dto.UserRoleUpdateDTO;
 import ClubCard.backend.t1debut_project.utils.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,11 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PutMapping("/members/{id}/privilege")
@@ -44,10 +47,9 @@ public class AdminController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('SUPER-ADMIN')")
-    public ResponseEntity<String> registerNewUser(@RequestBody UserRegistrationDTO userRegistrationDTO, PasswordEncoder passwordEncoder) {
+    public ResponseEntity<String> registerNewUser(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
         userService.registerUser(userRegistrationDTO, passwordEncoder);
-        return ResponseEntity.ok(userRegistrationDTO.toString());
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/members")
@@ -57,7 +59,7 @@ public class AdminController {
     }
 
     @PutMapping("/members/{id}/change-role")
-    @PreAuthorize("hasRole('SUPER-ADMIN') or (hasRole('ADMIN') and @userService.getUserRole(#id) != 'ADMIN')")
+    @PreAuthorize("hasRole('SUPER-ADMIN')")
     public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long id, @RequestBody UserRoleUpdateDTO userRoleUpdateDTO) {
         return ResponseEntity.ok(userService.changeUserRole(id, userRoleUpdateDTO.getRole()));
     }

@@ -3,6 +3,7 @@ package ClubCard.backend.t1debut_project.controllers;
 import ClubCard.backend.t1debut_project.dto.UserDTO;
 import ClubCard.backend.t1debut_project.dto.UserUpdateDTO;
 import ClubCard.backend.t1debut_project.utils.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +27,7 @@ public class UserController {
 
     @PutMapping("/profile/update-fields")
     public ResponseEntity<UserDTO> updateUserProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody UserUpdateDTO updateDTO) {
+            @AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody UserUpdateDTO updateDTO) {
         UserDTO updatedUser = userService.updateUserProfile(userDetails.getUsername(), updateDTO);
         return ResponseEntity.ok(updatedUser);
     }
